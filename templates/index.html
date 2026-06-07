@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RVCE Smart Attendance</title>
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --primary-dark: #004494;
+            --success-green: #28a745;
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* College Branding Header */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-badge {
+            background-color: var(--primary-blue);
+            color: white;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: 1.5px;
+            padding: 12px 28px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.25);
+        }
+
+        .brand-title {
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        p.subtitle { 
+            color: var(--text-muted); 
+            font-size: 15px; 
+            margin: 0 0 30px 0; 
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 16px; /* Must be 16px to prevent iOS auto-zoom */
+            color: var(--text-dark);
+            background-color: #f1f5f9;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
+        }
+
+        #student-id { text-transform: uppercase; }
+        
+        #otp {
+            letter-spacing: 6px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2);
+        }
+
+        button:active { 
+            background-color: var(--primary-dark); 
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background-color: #a0c4eb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Success Screen */
+        #success-screen { display: none; }
+        
+        .success-box {
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+            padding: 30px;
+            border-radius: 16px;
+            margin-top: 25px;
+        }
+
+        .big-number { 
+            font-size: 64px; 
+            color: var(--success-green); 
+            font-weight: 800; 
+            margin: 10px 0 0 0;
+            line-height: 1;
+        }
+
+        .error { 
+            color: #dc3545; 
+            background: #ffe6e6;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px; 
+            margin-bottom: 20px; 
+            display: none; 
+            font-weight: 500;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="brand-header">
+        <div class="brand-badge">RVCE</div>
+        <h1 class="brand-title">Smart Attendance System</h1>
+    </div>
+
+    <div class="card" id="login-screen">
+        <p class="subtitle">Enter your Student ID and the OTP sent to your registered email.</p>
+        
+        <div id="error-msg" class="error"></div>
+
+        <div class="input-group">
+            <label>Student ID</label>
+            <input type="text" id="student-id" placeholder="e.g. 1RV20CS001" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label>One-Time Password</label>
+            <input type="text" id="otp" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="------" autocomplete="one-time-code">
+        </div>
+
+        <button id="verify-btn" onclick="verifyOTP()">Verify Identity</button>
+    </div>
+
+    <div class="card" id="success-screen">
+        <div style="font-size: 50px; margin-bottom: 10px;">✅</div>
+        <h2 style="color: var(--text-dark); margin:0 0 5px 0;">Access Granted</h2>
+        <p class="subtitle" style="margin-bottom: 10px;">You may now enter the classroom.</p>
+        
+        <div class="success-box">
+            <p style="margin:0; font-weight:700; color:#2f855a; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Total Classes Attended</p>
+            <div class="big-number" id="attendance-count">0</div>
+        </div>
+        
+        <button style="margin-top:25px; background-color: #e2e8f0; color: var(--text-dark); box-shadow: none;" onclick="location.reload()">Return Home</button>
+    </div>
+
+    <div class="footer">
+        Department of Computer Science & Engineering
+    </div>
+
+    <script>
+        async function verifyOTP() {
+            const studentId = document.getElementById('student-id').value.trim().toUpperCase();
+            const otp = document.getElementById('otp').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            const btn = document.getElementById('verify-btn');
+
+            if(!studentId || !otp) {
+                errorMsg.innerText = "Please fill in both fields.";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            // Visual feedback that it is processing
+            btn.innerText = "Verifying...";
+            btn.disabled = true;
+            errorMsg.style.display = "none";
+
+            try {
+                const response = await fetch('/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ student_id: studentId, otp: otp })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('success-screen').style.display = 'block';
+                    document.getElementById('attendance-count').innerText = data.attended;
+                } else {
+                    errorMsg.innerText = data.message;
+                    errorMsg.style.display = "block";
+                    btn.innerText = "Verify Identity";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                errorMsg.innerText = "Connection error. Ensure you are on the same WiFi as the system.";
+                errorMsg.style.display = "block";
+                btn.innerText = "Verify Identity";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

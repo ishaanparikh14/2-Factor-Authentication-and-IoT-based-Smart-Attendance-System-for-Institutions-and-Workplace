@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Admin Panel | RVCE</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f0f4f8; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
+        h2 { color: #1e293b; margin-top: 0; }
+        .counter-box { font-size: 48px; font-weight: 800; color: #0056b3; margin: 20px 0; }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        .btn-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; }
+        .start { background: #28a745; }
+        .undo { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Class Manager</h2>
+        <div class="counter-box">{{ total }}</div>
+        <p style="color: #64748b; font-size: 14px;">Total Classes Conducted</p>
+        
+        <form method="POST">
+            <input type="password" name="password" placeholder="Admin Passcode" required>
+            <div class="btn-group">
+                <button type="submit" name="action" value="start" class="start">Start (+1)</button>
+                <button type="submit" name="action" value="undo" class="undo">Undo (-1)</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

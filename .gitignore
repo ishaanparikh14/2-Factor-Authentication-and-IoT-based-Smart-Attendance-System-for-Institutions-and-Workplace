@@ -1,0 +1,19 @@
+# Models (Large files)
+models/*.onnx
+
+# Databases
+*.db
+*.sqlite3
+
+# Credentials & Keys
+firebase_key.json
+credentials.json
+
+# Environment & Python
+venv/
+__pycache__/
+*.pyc
+
+# OS/System files
+.DS_Store
+.env
